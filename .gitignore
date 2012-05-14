@@ -4,3 +4,5 @@
 .*.swp
 Makefile
 moc_*.cpp
+smplayer-*
+hints

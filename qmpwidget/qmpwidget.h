@@ -127,6 +127,7 @@ class QMPwidget : public QWidget
 		void writeCommand(const QString &command);
 
 	protected:
+		QWidget *m_widget;
 		virtual void mouseDoubleClickEvent(QMouseEvent *event);
 		virtual void keyPressEvent(QKeyEvent *event);
 		virtual void resizeEvent(QResizeEvent *event);
@@ -151,7 +152,6 @@ class QMPwidget : public QWidget
 
 	private:
 		QMPProcess *m_process;
-		QWidget *m_widget;
 		QPointer<QAbstractSlider> m_seekSlider;
 		QPointer<QAbstractSlider> m_volumeSlider;
 		Qt::WindowFlags m_windowFlags;

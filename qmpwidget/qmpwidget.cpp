@@ -929,7 +929,10 @@ void QMPwidget::load(const QString &url)
 	writeCommand("pausing_keep_force pt_step 1");
 	writeCommand("get_property pause");
 
-	writeCommand(QString("loadfile '%1'").arg(url));
+        if (url.endsWith(".txt", Qt::CaseInsensitive))
+          writeCommand(QString("loadlist '%1'").arg(url));
+        else
+          writeCommand(QString("loadfile '%1'").arg(url));
 }
 
 /*!
