@@ -73,15 +73,21 @@ class PlayerPanel : public QWidget
       setParent(parent);
 
       m_player = new Player(playerArgs, file, this);
+      connect(m_player, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
       m_layout.addWidget(m_player, 0, 0);
 
-      m_positionLabel.setText("foo");
+      m_positionLabel.setText("Initializing...");
       m_layout.addWidget(&m_positionLabel, 1, 0);
 
       setLayout(&m_layout);
     }
 
     Player* player() { return m_player; }
+
+  protected slots:
+    void stateChanged (int state) {
+      m_positionLabel.setText("State " + QString::number(state));
+    }
 
   protected:
     QGridLayout m_layout;
@@ -147,8 +153,9 @@ int main (int argc, char **argv) {
         else
           playerArgs.append("directx,");
 #else
-        playerArgs.append("xv");
+        playerArgs.append("xv,x11");
 #endif
+        playerArgs.append("-zoom"); // e.g. vo=x11
         playerArgs.append("-idx");
         playerArgs.append("-softvol");
 

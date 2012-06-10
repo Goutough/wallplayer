@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
-SUBDIRS += wallplayer qmpwidget
+SUBDIRS += qmpwidget wallplayer
 
 CONFIG += ordered
 
