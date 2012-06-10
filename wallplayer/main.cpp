@@ -1,14 +1,15 @@
 #include <QApplication>
+#include <QDebug>
+#include <QPushButton>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPainter>
+#include <QRegExp>
 #include <QShowEvent>
 #include <QSlider>
-#include <iostream>
 
 #include "qmpwidget.h"
-
 
 class Player : public QMPwidget
 {
@@ -34,6 +35,7 @@ class Player : public QMPwidget
                   QMPwidget::keyPressEvent(event);
                 }
 
+                /*
                 void paintEvent (QPaintEvent *event) {
                   if (hasFocus()) {
                     QPainter painter(this);
@@ -42,17 +44,19 @@ class Player : public QMPwidget
                     painter.drawRect(playerRect.adjusted(-3,-3,3,3));
                   }
                 }
+                */
 
 
         private slots:
                 void stateChanged(int state) {
-                        if (state == QMPwidget::NotStartedState)
-                          QApplication::exit();
+                  if (state == QMPwidget::NotStartedState)
+                    QApplication::exit();
                 }
 
         protected:
                 void showEvent(QShowEvent *event) {
                   /* FIXME: wait for all players to be ready */
+                  qDebug() << "show; state=" << state() << ", sptn=" << event->spontaneous();
                   if (!event->spontaneous() && state() == QMPwidget::IdleState) {
                     QMPwidget::load(m_url);
                   }
@@ -72,12 +76,21 @@ class PlayerPanel : public QWidget
     {
       setParent(parent);
 
+      /*
       m_player = new Player(playerArgs, file, this);
       connect(m_player, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
       m_layout.addWidget(m_player, 0, 0);
 
       m_positionLabel.setText("Initializing...");
       m_layout.addWidget(&m_positionLabel, 1, 0);
+      */
+
+      m_statusLabel.setText("Ready.");
+      m_layout.addWidget(&m_statusLabel);
+
+      QPushButton* addFileButton = new QPushButton("Add files...", this);
+      connect(addFileButton, SIGNAL(clicked()), this, SLOT(launchAddFileDialog()));
+      m_layout.addWidget(addFileButton);
 
       setLayout(&m_layout);
     }
@@ -89,11 +102,50 @@ class PlayerPanel : public QWidget
       m_positionLabel.setText("State " + QString::number(state));
     }
 
+    void launchAddFileDialog ()
+    {
+      int nloaded = 0;
+      QStringList filenames = QFileDialog::getOpenFileNames(this, "Select one or more files to open");
+
+      for (int i=0; i<filenames.size(); ++i) {
+        QString filename(filenames[i]);
+        if (filename.contains(QRegExp("txt$"))) {
+          qDebug() << "loading playlist" << filename;
+
+          QFile playlistFile(filename);
+
+          if (!playlistFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+              qWarning() << "couldn't open playlist file" << filename;
+              continue;
+          }
+
+          while (!playlistFile.atEnd()) {
+            QString line(playlistFile.readLine());
+            line = line.left(line.size()-1);
+            qDebug() << "loading playlist entry" << line;
+            ++nloaded;
+            m_playlist.append(line);
+          }
+        } else {
+          qDebug() << "loading file" << filename;
+          ++nloaded;
+          m_playlist.append(filename);
+        }
+      }
+
+      m_statusLabel.setText(QString("Loaded %1 files. %2 files total in playlist now.")
+          .arg(nloaded).arg(m_playlist.size()));
+
+      return;
+    }
+
   protected:
+    QList<QString> m_playlist;
     QGridLayout m_layout;
     Player* m_player;
     QLabel m_positionLabel;
     QLabel m_volumeLabel;
+    QLabel m_statusLabel;
 
   private:
     PlayerPanel();
@@ -173,7 +225,7 @@ int main (int argc, char **argv) {
 
         /* TODO color picker */
         QPalette palette = widget.palette();
-        palette.setColor(QPalette::Window, Qt::black);
+        //palette.setColor(QPalette::Window, Qt::black);
         widget.setPalette(palette);
 
         widget.show();
