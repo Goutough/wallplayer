@@ -17,6 +17,8 @@
  */
 
 
+#define QMP_DEBUG_OUTPUT 1
+
 #include <iostream>
 #include <QAbstractSlider>
 #include <QKeyEvent>
