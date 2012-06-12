@@ -28,11 +28,9 @@ class PlayerPanel : public QWidget
 
   protected:
     QStringList m_playlist;
-    int playlistPosition;
+    int m_playlistPosition;
     QGridLayout m_layout;
     Player* m_player;
-    QLabel m_positionLabel;
-    QLabel m_volumeLabel;
     ControlPanel* m_controlpanel;
 
   private:

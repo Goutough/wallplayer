@@ -17,7 +17,7 @@
  */
 
 
-#define QMP_DEBUG_OUTPUT 1
+//#define QMP_DEBUG_OUTPUT 1
 
 #include <iostream>
 #include <QAbstractSlider>
@@ -36,7 +36,7 @@
 
 #include "qmpwidget.h"
 
-//#define QMP_DEBUG_OUTPUT
+#define QMP_DEBUG_OUTPUT
 
 #ifdef QMP_USE_YUVPIPE
  #include "qmpyuvreader.h"
@@ -152,7 +152,7 @@ class QMPOpenGLVideoWidget : public QGLWidget
 
 		void resizeGL(int w, int h)
 		{
-			glViewport(0, 0, w, qMax(h, 1));
+                  glViewport(0, 0, w, qMax(h, 1));
 		}
 
 		void paintGL()
@@ -372,6 +372,7 @@ class QMPProcess : public QProcess
 
 		void stop()
 		{
+			changeState(QMPwidget::StoppedState);
 			writeCommand("stop");
 		}
 
@@ -443,7 +444,8 @@ class QMPProcess : public QProcess
 			} else if (line.startsWith("No stream found")) {
 				changeState(QMPwidget::ErrorState, line);
 			} else if (line.startsWith("A:") || line.startsWith("V:")) {
-				if (m_state != QMPwidget::PlayingState) {
+				if (m_state != QMPwidget::PlayingState
+                                    && m_state != QMPwidget::StoppedState) {
 					changeState(QMPwidget::PlayingState);
 				}
 				parsePosition(line);
@@ -1166,6 +1168,7 @@ void QMPwidget::updateWidgetSize()
 	} else {
 		m_widget->setGeometry(QRect(QPoint(0, 0), size()));
 	}
+
 }
 
 void QMPwidget::delayedSeek()

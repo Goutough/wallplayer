@@ -17,11 +17,29 @@ class WallPlayerMainWindow : public QWidget
 
 
   protected:
-      void keyPressEvent(QKeyEvent *event) {
+      bool eventFilter(QObject *obj, QEvent *event)
+      {
+        if (event->type() == QEvent::KeyPress) {
+          QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+          if (keyEvent->modifiers() & Qt::ControlModifier) {
+            handleKeyPress(keyEvent);
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+
+      void keyPressEvent(QKeyEvent *event) { handleKeyPress(event); }
+
+      void handleKeyPress(QKeyEvent* event)
+      {
         // pause/resume all
         switch (event->key()) {
           case Qt::Key_Escape:
-            QApplication::exit();
+            if (event->modifiers() & Qt::ControlModifier)
+              QApplication::exit();
             break;
 
           case Qt::Key_Space:
@@ -43,33 +61,33 @@ class WallPlayerMainWindow : public QWidget
       }
 };
 
-
 int main (int argc, char **argv) {
         QApplication app(argc, argv);
 
-        WallPlayerMainWindow widget;
+        WallPlayerMainWindow mainWindow;
 
-        QGridLayout layout(&widget);
-        widget.setLayout(&layout);
+        QGridLayout layout(&mainWindow);
+        mainWindow.setLayout(&layout);
 
         QStringList appArgs = QApplication::arguments(); // LATER
 
         for (int i=0; i<4; ++i) {
-          PlayerPanel* playerPanel = new PlayerPanel(&widget);
-          widget.m_playerpanels.append(playerPanel); // FIXME registerPlayer
+          PlayerPanel* playerPanel = new PlayerPanel(&mainWindow);
+          playerPanel->installEventFilter(&mainWindow);
+          mainWindow.m_playerpanels.append(playerPanel); // FIXME registerPlayer
         }
 
-        layout.addWidget(widget.m_playerpanels[0], 0, 0);
-        layout.addWidget(widget.m_playerpanels[1], 0, 1);
-        layout.addWidget(widget.m_playerpanels[2], 1, 0);
-        layout.addWidget(widget.m_playerpanels[3], 1, 1);
+        layout.addWidget(mainWindow.m_playerpanels[0], 0, 0);
+        layout.addWidget(mainWindow.m_playerpanels[1], 0, 1);
+        layout.addWidget(mainWindow.m_playerpanels[2], 1, 0);
+        layout.addWidget(mainWindow.m_playerpanels[3], 1, 1);
 
         /* TODO color picker */
-        QPalette palette = widget.palette();
+        QPalette palette = mainWindow.palette();
         //palette.setColor(QPalette::Window, Qt::black);
-        widget.setPalette(palette);
+        mainWindow.setPalette(palette);
 
-        widget.show();
+        mainWindow.show();
 
         return app.exec();
 }

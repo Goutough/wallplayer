@@ -13,14 +13,14 @@
 
 class PlayerPanel;
 
-class ControlPanel : public QWidget
+class ControlPanel : public QFrame
 {
   Q_OBJECT
 
   public:
     ControlPanel(QWidget* parent, PlayerPanel* playerPanel);
 
-    QSize sizeHint () const { return QSize(200,-1); }
+    QSize sizeHint () const { return QSize(100,50); }
 
     void setStatus(QString& status) {
       m_statusLabel.setText(status);

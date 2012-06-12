@@ -126,14 +126,13 @@ class QMPwidget : public QWidget
 
 		void writeCommand(const QString &command);
 
+		void updateWidgetSize();
+
 	protected:
 		QWidget *m_widget;
 		virtual void mouseDoubleClickEvent(QMouseEvent *event);
 		virtual void keyPressEvent(QKeyEvent *event);
 		virtual void resizeEvent(QResizeEvent *event);
-
-	private:
-		void updateWidgetSize();
 
 	private slots:
 		void setVolume(int volume);

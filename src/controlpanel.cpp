@@ -1,3 +1,4 @@
+
 #include "controlpanel.h"
 #include "playerpanel.h"
 
@@ -5,6 +6,7 @@
 ControlPanel::ControlPanel(QWidget* parent, PlayerPanel* playerPanel)
 {
   setParent(parent);
+  setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
   m_playerPanel = playerPanel;
 

@@ -2,12 +2,16 @@
 #include "player.h"
 
 void PlayerPanel::stateChanged (int state) {
-  m_positionLabel.setText("State " + QString::number(state));
+  qDebug() << "state changed to" << state;
+
+  if (state == QMPwidget::StoppedState) {
+    m_player->hide();
+    m_controlpanel->show();
+  }
 }
 
 PlayerPanel::PlayerPanel(QWidget* parent)
-  : playlistPosition(0),
-    m_positionLabel(this), m_volumeLabel(this)
+  : m_playlistPosition(0)
 {
   setParent(parent);
 
@@ -37,15 +41,18 @@ QStringList& PlayerPanel::playlist() {
 QString PlayerPanel::playlistNext() {
   Q_ASSERT_X(!m_playlist.isEmpty(),"PlayerPanel","playlistNext");
 
-  QString next(m_playlist[0]);
-  m_playlist.removeFirst();
+  if (m_playlistPosition>=playlistCount())
+    m_playlistPosition = 0;
 
-  return next;
+  return playlist()[m_playlistPosition++];
 }
 
 void PlayerPanel::startPlayer()
 {
+      m_controlpanel->hide();
+
       QStringList playerArgs;
+
       playerArgs.append("-vo");
 #ifdef Q_OS_WIN
       if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA)
@@ -67,3 +74,4 @@ void PlayerPanel::startPlayer()
 
       return;
 }
+
