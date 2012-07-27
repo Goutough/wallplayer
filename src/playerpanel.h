@@ -15,13 +15,19 @@ class PlayerPanel : public QWidget
   public:
     PlayerPanel(QWidget* parent);
     Player* player();
-    void setStatus(QString& status);
+    void setStatus(QString status);
+
+    int queueFiles(QStringList& filenames);
     void queueFile(QString& filename);
+    void queueMediaFile(QString& filename);
+    void queuePlaylistFile(QString& filename);
+
     int playlistCount();
     void shufflePlaylist();
     QStringList& playlist();
-    void startPlayer();
     QString playlistNext();
+
+    void startPlayer();
 
   protected slots:
     void stateChanged(int);

@@ -24,13 +24,12 @@ PlayerPanel::PlayerPanel(QWidget* parent)
 
 Player* PlayerPanel::player() { return m_player; }
 
-void PlayerPanel::setStatus(QString& status) { m_controlpanel->setStatus(status); }
-
-void PlayerPanel::queueFile(QString& filename) { m_playlist.append(filename); }
+void PlayerPanel::setStatus(QString status) { m_controlpanel->setStatus(status); }
 
 int PlayerPanel::playlistCount() { return m_playlist.size(); }
 
 void PlayerPanel::shufflePlaylist() {
+  Q_ASSERT_X(m_playlist.size()>1,"PlayerPanel","shufflePlaylist");
   std::random_shuffle(m_playlist.begin(), m_playlist.end());
 }
 
@@ -73,5 +72,61 @@ void PlayerPanel::startPlayer()
       m_layout.addWidget(m_player);
 
       return;
+}
+
+void PlayerPanel::queueMediaFile (QString& filename)
+{
+  m_playlist.append(filename);
+
+  m_controlpanel->setPlayEnabled(true);
+
+  if (m_playlist.size()>1)
+    m_controlpanel->setShuffleEnabled(true);
+}
+
+void PlayerPanel::queuePlaylistFile (QString& filename)
+{
+  qDebug() << "loading playlist" << filename;
+
+  QFile playlistFile(filename);
+
+  if (!playlistFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    qWarning() << "couldn't open playlist file" << filename;
+    return;
+  }
+
+  while (!playlistFile.atEnd()) {
+    QString line(playlistFile.readLine());
+    line = line.left(line.size()-1);
+    qDebug() << "loading playlist entry" << line;
+    this->queueMediaFile(line);
+  }
+}
+
+void PlayerPanel::queueFile (QString& filename)
+{
+  if (filename.contains(QRegExp("txt$")))
+    this->queuePlaylistFile(filename);
+  else
+    this->queueMediaFile(filename);
+}
+
+int PlayerPanel::queueFiles (QStringList& filenames)
+{
+  int oldPlaylistSize = this->playlistCount();
+
+  for (int i=0; i<filenames.size(); ++i) {
+    QString filename(filenames[i]);
+    this->queueFile(filename);
+  }
+
+  int newPlaylistSize = this->playlistCount();
+
+  int nloaded = newPlaylistSize - oldPlaylistSize;
+
+  this->setStatus(QString("Loaded %1 files. %2 files total in playlist now.")
+                    .arg(nloaded).arg(newPlaylistSize));
+
+  return nloaded;
 }
 

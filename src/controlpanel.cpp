@@ -40,42 +40,9 @@ ControlPanel::ControlPanel(QWidget* parent, PlayerPanel* playerPanel)
 
 void ControlPanel::launchAddFileDialog ()
 {
-  int nloaded = 0;
   QStringList filenames = QFileDialog::getOpenFileNames(this, "Select one or more files to open");
 
-  for (int i=0; i<filenames.size(); ++i) {
-    QString filename(filenames[i]);
-    if (filename.contains(QRegExp("txt$"))) {
-      qDebug() << "loading playlist" << filename;
-
-      QFile playlistFile(filename);
-
-      if (!playlistFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "couldn't open playlist file" << filename;
-        continue;
-      }
-
-      while (!playlistFile.atEnd()) {
-        QString line(playlistFile.readLine());
-        line = line.left(line.size()-1);
-        qDebug() << "loading playlist entry" << line;
-        ++nloaded;
-        m_playerPanel->queueFile(line);
-      }
-    } else {
-      qDebug() << "loading file" << filename;
-      ++nloaded;
-      m_playerPanel->queueFile(filename);
-    }
-  }
-
-  if (nloaded) {
-    m_shuffleButton->setEnabled(true);
-    m_playButton->setEnabled(true);
-  }
-
-  m_statusLabel.setText(QString("Loaded %1 files. %2 files total in playlist now.")
-      .arg(nloaded).arg(m_playerPanel->playlistCount()));
+  m_playerPanel->queueFiles(filenames);
 
   return;
 }
@@ -96,3 +63,4 @@ void ControlPanel::startPlaying()
 
   return;
 }
+

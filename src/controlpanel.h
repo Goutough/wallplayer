@@ -26,6 +26,11 @@ class ControlPanel : public QFrame
       m_statusLabel.setText(status);
     }
 
+    int addFiles (QStringList&);
+
+    void setShuffleEnabled(bool enabled) { m_shuffleButton->setEnabled(enabled); }
+    void setPlayEnabled(bool enabled) { m_playButton->setEnabled(enabled); }
+
   protected slots:
     void launchAddFileDialog();
     void shufflePlaylist();
