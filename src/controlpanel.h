@@ -22,7 +22,7 @@ class ControlPanel : public QFrame
 
     QSize sizeHint () const { return QSize(100,50); }
 
-    void setStatus(QString& status) {
+    void setStatus(QString status) {
       m_statusLabel.setText(status);
     }
 

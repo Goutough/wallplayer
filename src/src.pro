@@ -4,6 +4,10 @@ DESTDIR = .
 
 QT += network
 QT += opengl
+
+CONFIG += qxt
+QXT += core
+
 CONFIG += pipemode
 
 HEADERS += playerpanel.h controlpanel.h player.h qmpwidget.h

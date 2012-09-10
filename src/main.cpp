@@ -69,11 +69,17 @@ int main (int argc, char **argv) {
         QGridLayout layout(&mainWindow);
         mainWindow.setLayout(&layout);
 
-        QStringList appArgs = QApplication::arguments(); // LATER
+        QStringList appArgs = QApplication::arguments();
 
         for (int i=0; i<4; ++i) {
           PlayerPanel* playerPanel = new PlayerPanel(&mainWindow);
           playerPanel->installEventFilter(&mainWindow);
+
+          if (i<appArgs.size()) {
+            qDebug() << "Queuing file from command line: " << appArgs[i+1];
+            playerPanel->queueFile(appArgs[i+1]);
+          }
+
           mainWindow.m_playerpanels.append(playerPanel); // FIXME registerPlayer
         }
 
@@ -84,7 +90,7 @@ int main (int argc, char **argv) {
 
         /* TODO color picker */
         QPalette palette = mainWindow.palette();
-        //palette.setColor(QPalette::Window, Qt::black);
+        palette.setColor(QPalette::Window, Qt::black);
         mainWindow.setPalette(palette);
 
         mainWindow.show();

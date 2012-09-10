@@ -109,6 +109,8 @@ void PlayerPanel::queueFile (QString& filename)
     this->queuePlaylistFile(filename);
   else
     this->queueMediaFile(filename);
+
+  setStatus(QString("%2 files total in playlist now.").arg(this->playlistCount()));
 }
 
 int PlayerPanel::queueFiles (QStringList& filenames)
@@ -124,8 +126,8 @@ int PlayerPanel::queueFiles (QStringList& filenames)
 
   int nloaded = newPlaylistSize - oldPlaylistSize;
 
-  this->setStatus(QString("Loaded %1 files. %2 files total in playlist now.")
-                    .arg(nloaded).arg(newPlaylistSize));
+  setStatus(QString("Loaded %1 files. %2 files total in playlist now.")
+      .arg(nloaded).arg(newPlaylistSize));
 
   return nloaded;
 }

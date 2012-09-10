@@ -10,7 +10,7 @@ ControlPanel::ControlPanel(QWidget* parent, PlayerPanel* playerPanel)
 
   m_playerPanel = playerPanel;
 
-  m_statusLabel.setText("Ready.");
+  setStatus("Ready.");
   m_layout.addWidget(&m_statusLabel);
 
   QPushButton* addFileButton = new QPushButton("Add files...", this);
@@ -50,14 +50,14 @@ void ControlPanel::launchAddFileDialog ()
 void ControlPanel::shufflePlaylist()
 {
   m_playerPanel->shufflePlaylist();
-  m_statusLabel.setText(QString("Shuffled %1 files.").arg(m_playerPanel->playlistCount()));
+  setStatus(QString("Shuffled %1 files.").arg(m_playerPanel->playlistCount()));
 }
 
 void ControlPanel::startPlaying()
 {
   qDebug() << "starting play of" << m_playerPanel->playlist()[0];
 
-  m_statusLabel.setText("Initializing player...");
+  setStatus("Initializing player...");
 
   m_playerPanel->startPlayer();
 
