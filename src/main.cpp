@@ -9,12 +9,18 @@
 
 class WallPlayerMainWindow : public QWidget
 {
-        Q_OBJECT
+  Q_OBJECT
+
+  private:
+      // modifier for shortcuts affecting the application, not individual panels
+      int globalModifier = Qt::ControlModifier;
+      // background vids are being lowered in volume by this factor when an
+      // individual player is running fullscreen
+      float fullscreenVolumeRatio = 0.5;
 
   public:
-          //WallPlayerMainWindow() {}
-          QList<PlayerPanel*> m_playerpanels;
-
+      //WallPlayerMainWindow() {}
+      QList<PlayerPanel*> m_playerpanels;
 
   protected:
       bool eventFilter(QObject *obj, QEvent *event)
@@ -35,13 +41,26 @@ class WallPlayerMainWindow : public QWidget
 
       void handleKeyPress(QKeyEvent* event)
       {
-        // pause/resume all
         switch (event->key()) {
+          /* quit */
           case Qt::Key_Escape:
-            if (event->modifiers() & Qt::ControlModifier)
+            if (event->modifiers() & globalModifier)
               QApplication::exit();
-            break;
+          break;
 
+          /* fullscreen toggle */
+          case Qt::Key_F:
+            if (event->modifiers() & globalModifier)
+            {
+              if (isFullScreen()) {
+                showNormal();
+              } else {
+                showFullScreen();
+              }
+            }
+          break;
+
+          /* pause toggle */
           case Qt::Key_Space:
           case Qt::Key_P:
             bool atLeastOnePlaying = false;
@@ -56,7 +75,7 @@ class WallPlayerMainWindow : public QWidget
             else
               for (int i=0; i<m_playerpanels.size(); ++i)
                 m_playerpanels[i]->player()->play();
-            break;
+          break;
         }
       }
 };
