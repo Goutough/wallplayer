@@ -15,11 +15,37 @@ PlayerPanel::PlayerPanel(QWidget* parent)
 {
   setParent(parent);
 
+  QPalette palette = this->palette();
+  palette.setColor(QPalette::Window, Qt::black);
+  palette.setColor(QPalette::WindowText, Qt::gray);
+
+  palette.setColor(QPalette::Text, Qt::gray);
+  setPalette(palette);
+
+  setFrameStyle(QFrame::Plain | QFrame::Box);
+  setLineWidth(3);
+
   m_controlpanel = new ControlPanel(this, this);
+
+  m_controlpanel->installEventFilter(this);
 
   m_layout.addWidget(m_controlpanel);
 
   setLayout(&m_layout);
+}
+
+bool PlayerPanel::eventFilter(QObject *obj, QEvent *event) {
+  if (event->type() != QEvent::FocusIn && event->type() != QEvent::FocusOut)
+    return false;
+
+  QPalette palette = this->palette();
+  if (event->type() == QEvent::FocusIn)
+    palette.setColor(QPalette::WindowText, Qt::yellow);
+  else
+    palette.setColor(QPalette::WindowText, Qt::gray);
+  setPalette(palette);
+
+  return false;
 }
 
 Player* PlayerPanel::player() { return m_player; }
@@ -70,6 +96,8 @@ void PlayerPanel::startPlayer()
       m_player = new Player(playerArgs, playlistNext(), this);
       connect(m_player, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
       m_layout.addWidget(m_player);
+
+      m_player->installEventFilter(this);
 
       return;
 }

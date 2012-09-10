@@ -8,7 +8,7 @@
 
 class ControlPanel;
 
-class PlayerPanel : public QWidget
+class PlayerPanel : public QFrame
 {
   Q_OBJECT
 
@@ -16,6 +16,7 @@ class PlayerPanel : public QWidget
     PlayerPanel(QWidget* parent);
     Player* player();
     void setStatus(QString status);
+    bool eventFilter(QObject *obj, QEvent *event);
 
     int queueFiles(QStringList& filenames);
     void queueFile(QString& filename);

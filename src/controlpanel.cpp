@@ -15,23 +15,27 @@ ControlPanel::ControlPanel(QWidget* parent, PlayerPanel* playerPanel)
 
   QPushButton* addFileButton = new QPushButton("Add files...", this);
   addFileButton->setToolTip("Add media files and playlists (*.txt)");
+  addFileButton->installEventFilter(m_playerPanel);
   connect(addFileButton, SIGNAL(clicked()), this, SLOT(launchAddFileDialog()));
   m_layout.addWidget(addFileButton);
 
   QPushButton* addDirectoryButton = new QPushButton("Add directory...", this);
   addDirectoryButton->setToolTip("Add a directory and all files in it and its subdirectories");
   addDirectoryButton->setEnabled(false);
+  addDirectoryButton->installEventFilter(m_playerPanel);
   m_layout.addWidget(addDirectoryButton);
 
   m_shuffleButton = new QPushButton("Shuffle playlist", this);
   m_shuffleButton->setToolTip("Shuffle the current playlist");
   m_shuffleButton->setEnabled(false);
+  m_shuffleButton->installEventFilter(m_playerPanel);
   connect(m_shuffleButton, SIGNAL(clicked()), this, SLOT(shufflePlaylist()));
   m_layout.addWidget(m_shuffleButton);
 
   m_playButton = new QPushButton("Play!", this);
   m_playButton->setToolTip("Start playing the current playlist");
   m_playButton->setEnabled(false);
+  m_playButton->installEventFilter(m_playerPanel);
   connect(m_playButton, SIGNAL(clicked()), this, SLOT(startPlaying()));
   m_layout.addWidget(m_playButton);
 
