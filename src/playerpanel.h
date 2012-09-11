@@ -39,6 +39,7 @@ class PlayerPanel : public QFrame
     QGridLayout m_layout;
     Player* m_player;
     ControlPanel* m_controlpanel;
+    QWidget* m_playerstatus;
 
   private:
     PlayerPanel();

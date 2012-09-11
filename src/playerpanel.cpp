@@ -95,9 +95,17 @@ void PlayerPanel::startPlayer()
 
       m_player = new Player(playerArgs, playlistNext(), this);
       connect(m_player, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
-      m_layout.addWidget(m_player);
-
       m_player->installEventFilter(this);
+
+      m_playerstatus = new QFrame(this);
+      QHBoxLayout* playerstatuslayout = new QHBoxLayout;
+      m_playerstatus->setLayout(playerstatuslayout);
+      playerstatuslayout->addWidget(new QPushButton("foo", this));
+      playerstatuslayout->addWidget(new QPushButton("bar", this));
+      playerstatuslayout->addWidget(new QPushButton("quux", this));
+      m_layout.addWidget(m_playerstatus);
+
+      m_layout.addWidget(m_player);
 
       return;
 }
