@@ -134,9 +134,10 @@ class QMPwidget : public QWidget
 		virtual void keyPressEvent(QKeyEvent *event);
 		virtual void resizeEvent(QResizeEvent *event);
 
-	private slots:
+        public slots:
 		void setVolume(int volume);
 
+	private slots:
 		void mpStateChanged(int state);
 		void mpStreamPositionChanged(double position);
 		void mpVolumeChanged(int volume);

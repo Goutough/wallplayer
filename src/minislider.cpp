@@ -59,3 +59,18 @@ void MiniSlider::setValue (int value)
   m_value = value;
   update();
 }
+
+
+void VolumeSlider::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+      setValue(((float)event->x()/width())*m_maxValue);
+
+    MiniSlider::mousePressEvent(event);
+}
+
+void VolumeSlider::mouseMoveEvent(QMouseEvent *event)
+{
+    setValue(((float)event->x()/width())*m_maxValue);
+    MiniSlider::mouseMoveEvent(event);
+}

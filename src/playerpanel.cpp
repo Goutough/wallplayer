@@ -99,11 +99,10 @@ void PlayerPanel::startPlayer()
       playerArgs.append("-idx");
       playerArgs.append("-softvol");
 
-      playerArgs.append("-nosound"); // DEBUG
+      //playerArgs.append("-nosound"); // DEBUG
 
       m_player = new Player(playerArgs, playlistNext(), this);
       connect(m_player->process(), SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
-      m_player->installEventFilter(this);
 
       m_playerstatus = new QFrame(this);
       QHBoxLayout* playerstatuslayout = new QHBoxLayout; /* TODO QGridLayout */
@@ -115,11 +114,16 @@ void PlayerPanel::startPlayer()
       playerstatuslayout->addWidget(m_streamPositionSlider);
 
       m_volumeSlider = new VolumeSlider(this);
+      m_player->setVolume(100);
+      m_volumeSlider->setValue(100);
+      connect(m_volumeSlider, SIGNAL(valueChanged(int)), m_player, SLOT(setVolume(int)));
       playerstatuslayout->addWidget(m_volumeSlider);
 
       m_layout.addWidget(m_playerstatus);
 
       m_layout.addWidget(m_player);
+
+      m_player->installEventFilter(this);
 
       return;
 }

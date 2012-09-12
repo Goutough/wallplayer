@@ -43,6 +43,10 @@ class VolumeSlider : public MiniSlider
   public:
     VolumeSlider(QWidget* parent) : MiniSlider(parent) { m_maxValue = 100; }
     QSize sizeHint() const { return QSize(50, 15); }
+
+  protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 };
 
 #endif
