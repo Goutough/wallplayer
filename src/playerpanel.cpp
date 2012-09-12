@@ -1,4 +1,7 @@
+#include <QProcess>
+
 #include "playerpanel.h"
+#include "minislider.h"
 #include "player.h"
 
 void PlayerPanel::stateChanged (int state) {
@@ -7,6 +10,11 @@ void PlayerPanel::stateChanged (int state) {
   if (state == QMPwidget::StoppedState) {
     m_player->hide();
     m_controlpanel->show();
+  }
+
+  if (state == QMPwidget::PlayingState && mediaInfo().ok) {
+    m_streamPositionSlider->setMaxValue(mediaInfo().length);
+    m_streamPositionSlider->setEnabled(mediaInfo().seekable);
   }
 }
 
@@ -94,15 +102,21 @@ void PlayerPanel::startPlayer()
       playerArgs.append("-nosound"); // DEBUG
 
       m_player = new Player(playerArgs, playlistNext(), this);
-      connect(m_player, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
+      connect(m_player->process(), SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
       m_player->installEventFilter(this);
 
       m_playerstatus = new QFrame(this);
-      QHBoxLayout* playerstatuslayout = new QHBoxLayout;
+      QHBoxLayout* playerstatuslayout = new QHBoxLayout; /* TODO QGridLayout */
       m_playerstatus->setLayout(playerstatuslayout);
-      playerstatuslayout->addWidget(new QPushButton("foo", this));
-      playerstatuslayout->addWidget(new QPushButton("bar", this));
-      playerstatuslayout->addWidget(new QPushButton("quux", this));
+
+      m_streamPositionSlider = new StreamSlider(this);
+      connect(m_streamPositionSlider, SIGNAL(valueChanged(int)), m_player, SLOT(seek(int)));
+      connect(m_player->process(), SIGNAL(streamPositionChanged(double)), m_streamPositionSlider, SLOT(setValue(double)));
+      playerstatuslayout->addWidget(m_streamPositionSlider);
+
+      m_volumeSlider = new VolumeSlider(this);
+      playerstatuslayout->addWidget(m_volumeSlider);
+
       m_layout.addWidget(m_playerstatus);
 
       m_layout.addWidget(m_player);
@@ -134,7 +148,7 @@ void PlayerPanel::queuePlaylistFile (QString& filename)
   while (!playlistFile.atEnd()) {
     QString line(playlistFile.readLine());
     line = line.left(line.size()-1);
-    qDebug() << "loading playlist entry" << line;
+    //qDebug() << "loading playlist entry" << line;
     this->queueMediaFile(line);
   }
 }

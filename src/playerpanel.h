@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "controlpanel.h"
+#include "minislider.h"
 #include "player.h"
 
 class ControlPanel;
@@ -30,6 +31,8 @@ class PlayerPanel : public QFrame
 
     void startPlayer();
 
+    QMPwidget::MediaInfo mediaInfo() { return m_player->mediaInfo(); }
+
   protected slots:
     void stateChanged(int);
 
@@ -40,6 +43,8 @@ class PlayerPanel : public QFrame
     Player* m_player;
     ControlPanel* m_controlpanel;
     QWidget* m_playerstatus;
+    StreamSlider* m_streamPositionSlider;
+    VolumeSlider* m_volumeSlider;
 
   private:
     PlayerPanel();

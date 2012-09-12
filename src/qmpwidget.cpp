@@ -272,6 +272,8 @@ class QMPProcess : public QProcess
 			myargs += "-nokeepaspect";
 			myargs += "-monitorpixelaspect";
 			myargs += "1";
+			myargs += "-osdlevel";
+			myargs += "1";
 			if (!useFakeInputconf) {
 				myargs += "-input";
 				myargs += "nodefault-bindings:conf=/dev/null";
