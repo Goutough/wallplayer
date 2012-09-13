@@ -7,6 +7,10 @@
 void PlayerPanel::stateChanged (int state) {
   qDebug() << "state changed to" << state;
 
+  if (state == QMPwidget::IdleState) {
+    m_player->load(playlistNext());
+  }
+
   if (state == QMPwidget::StoppedState) {
     m_player->hide();
     m_controlpanel->show();
@@ -99,25 +103,26 @@ void PlayerPanel::startPlayer()
       playerArgs.append("-idx");
       playerArgs.append("-softvol");
 
-      //playerArgs.append("-nosound"); // DEBUG
+      playerArgs.append("-nosound"); // DEBUG
 
       m_player = new Player(playerArgs, playlistNext(), this);
       connect(m_player->process(), SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
 
       m_playerstatus = new QFrame(this);
-      QHBoxLayout* playerstatuslayout = new QHBoxLayout; /* TODO QGridLayout */
+      QGridLayout* playerstatuslayout = new QGridLayout;
+      playerstatuslayout->setColumnStretch(0,1);
       m_playerstatus->setLayout(playerstatuslayout);
 
       m_streamPositionSlider = new StreamSlider(this);
       connect(m_streamPositionSlider, SIGNAL(valueChanged(int)), m_player, SLOT(seek(int)));
       connect(m_player->process(), SIGNAL(streamPositionChanged(double)), m_streamPositionSlider, SLOT(setValue(double)));
-      playerstatuslayout->addWidget(m_streamPositionSlider);
+      playerstatuslayout->addWidget(m_streamPositionSlider, 0, 0);
 
       m_volumeSlider = new VolumeSlider(this);
       m_player->setVolume(100);
       m_volumeSlider->setValue(100);
       connect(m_volumeSlider, SIGNAL(valueChanged(int)), m_player, SLOT(setVolume(int)));
-      playerstatuslayout->addWidget(m_volumeSlider);
+      playerstatuslayout->addWidget(m_volumeSlider, 0, 1);
 
       m_layout.addWidget(m_playerstatus);
 

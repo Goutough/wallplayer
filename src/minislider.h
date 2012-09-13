@@ -5,7 +5,7 @@
 #include <QFrame>
 #include <QDebug>
 
-class MiniSlider : public QFrame
+class MiniSlider : public QWidget
 {
   Q_OBJECT
 
@@ -42,7 +42,7 @@ class VolumeSlider : public MiniSlider
 {
   public:
     VolumeSlider(QWidget* parent) : MiniSlider(parent) { m_maxValue = 100; }
-    QSize sizeHint() const { return QSize(50, 15); }
+    QSize sizeHint() const { return QSize(150, 15); }
 
   protected:
     void mousePressEvent(QMouseEvent *event);
