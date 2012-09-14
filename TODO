@@ -1,0 +1,33 @@
+BUG: vid doesn't repaint in pause mode.
+BUG: next file isn't being loaded in certain cases
+
+status line (small!):
+  filename
+  next filename
+  speed (1x, 2x...)
+  pos (+numbers)
+  volume (+numbers)
+
+tech demo:
+  * minimal ui
+  * full status line
+  * fix focus issues
+  * slowdown/speedup
+  * mute on speed change/unmute on return to ~1x
+  * fwd/back slow/fast
+
+
+* qgridlayout for sliders
+* show upcoming file
+* rubberbands (QSplitter)
+* favorite clip
+* command line args
+* playlist management
+* global playlist
+* lower volume of background vids (ratio preference) when switching to single fullscreen
+
+* align up to 4 players automatically
+* bg color picker
+
+* find continuations smartly (eg. DISC1/2.avi)
+
