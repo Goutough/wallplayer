@@ -23,34 +23,37 @@ class WallPlayerMainWindow : public QWidget
       QList<PlayerPanel*> m_playerpanels;
 
   protected:
+      void keyPressEvent(QKeyEvent *event) { eventFilter(this, event); }
+
       bool eventFilter(QObject *obj, QEvent *event)
       {
-        if (event->type() == QEvent::KeyPress) {
-          QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-          if (keyEvent->modifiers() & Qt::ControlModifier) {
-            handleKeyPress(keyEvent);
-            return true;
-          }
-        }
+        if (event->type() != QEvent::KeyPress)
+          return false;
 
-        return false;
-      }
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 
+        switch (keyEvent->key())
+        {
+          /* focus change 1-4 */
+          case Qt::Key_1:
+            m_playerpanels[0]->player()->setFocus(Qt::ShortcutFocusReason);
+            break;
 
-      void keyPressEvent(QKeyEvent *event) { handleKeyPress(event); }
+          case Qt::Key_2:
+            m_playerpanels[1]->player()->setFocus(Qt::ShortcutFocusReason);
+            break;
 
-      void handleKeyPress(QKeyEvent* event)
-      {
-        switch (event->key()) {
-          /* quit */
-          case Qt::Key_Escape:
-            if (event->modifiers() & globalModifier)
-              QApplication::exit();
-          break;
+          case Qt::Key_3:
+            m_playerpanels[2]->player()->setFocus(Qt::ShortcutFocusReason);
+            break;
+
+          case Qt::Key_4:
+            m_playerpanels[3]->player()->setFocus(Qt::ShortcutFocusReason);
+            break;
 
           /* fullscreen toggle */
           case Qt::Key_F:
-            if (event->modifiers() & globalModifier)
+            //if (keyEvent->modifiers() & globalModifier)
             {
               if (isFullScreen()) {
                 showNormal();
@@ -58,25 +61,38 @@ class WallPlayerMainWindow : public QWidget
                 showFullScreen();
               }
             }
-          break;
+            return true;
+            break;
 
           /* pause toggle */
           case Qt::Key_Space:
           case Qt::Key_P:
-            bool atLeastOnePlaying = false;
+            {
+              bool atLeastOnePlaying = false;
 
-            for (int i=0; i<m_playerpanels.size(); ++i)
-              if (m_playerpanels[i]->player()->state() == QMPwidget::PlayingState)
-                atLeastOnePlaying = true;
+              for (int i=0; i<m_playerpanels.size(); ++i)
+                if (m_playerpanels[i]->player()->state() == QMPwidget::PlayingState)
+                  atLeastOnePlaying = true;
 
-            if (atLeastOnePlaying)
-              for (int i=0; i<m_playerpanels.size(); ++i)
-                m_playerpanels[i]->player()->pause();
-            else
-              for (int i=0; i<m_playerpanels.size(); ++i)
-                m_playerpanels[i]->player()->play();
-          break;
+              if (atLeastOnePlaying)
+                for (int i=0; i<m_playerpanels.size(); ++i)
+                  m_playerpanels[i]->player()->pause();
+              else
+                for (int i=0; i<m_playerpanels.size(); ++i)
+                  m_playerpanels[i]->player()->play();
+            }
+            return true;
+            break;
+
+          /* quit */
+          case Qt::Key_Escape:
+            //if (keyEvent->modifiers() & globalModifier)
+            QApplication::exit();
+            return true;
+            break;
         }
+
+        return false;
       }
 };
 

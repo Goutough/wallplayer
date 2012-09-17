@@ -1087,14 +1087,22 @@ void QMPwidget::keyPressEvent(QKeyEvent *event)
 			}
 			break;
 
+                        /*
 		case Qt::Key_F:
 			toggleFullScreen();
 			break;
+                        */
 
+                        /*
 		case Qt::Key_Q:
 		case Qt::Key_Escape:
 			stop();
 			break;
+                        */
+
+                case Qt::Key_Return:
+                        seek(100000, AbsoluteSeek);
+                        break;
 
 		case Qt::Key_Minus:
 			writeCommand("audio_delay -0.1");
