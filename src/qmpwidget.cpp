@@ -218,7 +218,7 @@ class QMPProcess : public QProcess
 #endif
 
 			m_movieFinishedTimer.setSingleShot(true);
-			m_movieFinishedTimer.setInterval(100);
+			m_movieFinishedTimer.setInterval(500);
 
 			connect(this, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdout()));
 			connect(this, SIGNAL(readyReadStandardError()), this, SLOT(readStderr()));
