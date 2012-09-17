@@ -128,6 +128,8 @@ void PlayerPanel::startPlayer()
 
       m_layout.addWidget(m_playerstatus);
 
+      m_playerstatus->hide();
+
       m_layout.addWidget(m_player);
 
       m_player->installEventFilter(this);
