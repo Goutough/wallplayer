@@ -35,12 +35,14 @@ PlayerPanel::PlayerPanel(QWidget* parent)
   setPalette(palette);
 
   setFrameStyle(QFrame::Plain | QFrame::Box);
-  setLineWidth(3);
+  setLineWidth(1);
 
   m_controlpanel = new ControlPanel(this, this);
 
   m_controlpanel->installEventFilter(this);
 
+  m_layout.setSpacing(0);
+  m_layout.setMargin(0);
   m_layout.addWidget(m_controlpanel);
 
   setLayout(&m_layout);

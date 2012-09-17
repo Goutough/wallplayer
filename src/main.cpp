@@ -102,6 +102,8 @@ int main (int argc, char **argv) {
         WallPlayerMainWindow mainWindow;
 
         QGridLayout layout(&mainWindow);
+        layout.setSpacing(0);
+        layout.setMargin(0);
         mainWindow.setLayout(&layout);
 
         QStringList appArgs = QApplication::arguments();
