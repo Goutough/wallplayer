@@ -509,7 +509,7 @@ class QMPProcess : public QProcess
 
 					// If the movie is near its end, start a timer that will check whether
 					// the movie has really finished.
-					if (qAbs(m_streamPosition - m_mediaInfo.length) < 1) {
+					if ((m_streamPosition - m_mediaInfo.length) < 1) {
 						m_movieFinishedTimer.start();
 					}
 				}
