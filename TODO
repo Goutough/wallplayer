@@ -1,6 +1,3 @@
-BUG: vid doesn't repaint in pause mode.
-BUG: next file isn't being loaded in certain cases
-
 status line (small!):
   filename
   next filename
@@ -9,7 +6,6 @@ status line (small!):
   volume (+numbers)
 
 tech demo:
-  * minimal ui
   * full status line
   * fix focus issues
   * slowdown/speedup
@@ -17,7 +13,6 @@ tech demo:
   * fwd/back slow/fast
 
 
-* qgridlayout for sliders
 * show upcoming file
 * rubberbands (QSplitter)
 * favorite clip
@@ -31,3 +26,7 @@ tech demo:
 
 * find continuations smartly (eg. DISC1/2.avi)
 
+gg
+*** FIX AND USE YUVPIPE MODE. This enables fixing/implementation of:
+ * pause redraw
+ * video wall export
