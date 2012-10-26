@@ -13,10 +13,10 @@ class WallPlayerMainWindow : public QWidget
 
   private:
       // modifier for shortcuts affecting the application, not individual panels
-      int globalModifier = Qt::ControlModifier;
+      const static int globalModifier = Qt::ControlModifier;
       // background vids are being lowered in volume by this factor when an
       // individual player is running fullscreen
-      float fullscreenVolumeRatio = 0.5;
+      const static float fullscreenVolumeRatio = 0.5;
 
   public:
       //WallPlayerMainWindow() {}
@@ -115,6 +115,7 @@ int main (int argc, char **argv) {
           if (i<appArgs.size()) {
             qDebug() << "Queuing file from command line: " << appArgs[i+1];
             playerPanel->queueFile(appArgs[i+1]);
+            playerPanel->startPlayer();
           }
 
           mainWindow.m_playerpanels.append(playerPanel); // FIXME registerPlayer

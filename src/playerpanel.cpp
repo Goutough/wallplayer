@@ -99,7 +99,7 @@ void PlayerPanel::startPlayer()
       else
         playerArgs.append("directx,");
 #else
-      playerArgs.append("gl2,gl,xv,x11");
+      playerArgs.append("xv,gl2,gl,x11"); // OSD rendering doesn't work with gl2 (and probably gl neither)
 #endif
       playerArgs.append("-zoom"); // e.g. vo=x11
       playerArgs.append("-idx");
